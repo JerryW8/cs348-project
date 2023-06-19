@@ -1,5 +1,15 @@
 const mysql = require("mysql")
 
+function dropTables() {
+  db_conn.query("DROP TABLE Media");
+  db_conn.query("DROP TABLE Crew");
+  db_conn.query("DROP TABLE Produced");
+  db_conn.query("DROP TABLE Role");
+  db_conn.query("DROP TABLE PlaysIn");
+  db_conn.query("DROP TABLE Collection");
+  db_conn.query("DROP TABLE HasNotes");
+}
+
 // INITIAL DATABASE SETUP
 
 let db_conn = mysql.createConnection({
@@ -29,14 +39,14 @@ db_conn.query(useQuery);
 let create_table_query = [
   'Media(titleID VARCHAR(100) NOT NULL, originalTitle VARCHAR(100), startYear DATE, rating DOUBLE(2,1), numVotes INT, PRIMARY KEY (titleID))',
   
-  'Crew(crewID VARCHAR (100) NOT NULL, name VARCHAR (100), role VARCHAR (100))',
-  'Produced(crewID VARCHAR (100) NOT NULL REFERENCES Crew(crewID), titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID))',
+  'Crew(crewID VARCHAR (100) NOT NULL, name VARCHAR (100), role VARCHAR (100), PRIMARY KEY (crewID))',
+  'Produced(crewID VARCHAR (100) NOT NULL REFERENCES Crew(crewID), titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID), PRIMARY KEY (crewID, titleID))',
   
-  'Role(roleID VARCHAR (100) NOT NULL, name VARCHAR (100) NOT NULL, characterName VARCHAR (100))',
-  'PlaysIn(roleID VARCHAR (100) NOT NULL REFERENCES Role(roleID), titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID))',
+  'Role(roleID VARCHAR (100) NOT NULL, name VARCHAR (100) NOT NULL, characterName VARCHAR (100), PRIMARY KEY (roleID))',
+  'PlaysIn(roleID VARCHAR (100) NOT NULL REFERENCES Role(roleID), titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID), PRIMARY KEY (roleID, titleID))',
 
-  'Collection(collectionID VARCHAR (100) NOT NULL, notes VARCHAR (1000), isWatched BOOL, rating DOUBLE(2,1))',
-  'HasNotes(titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID), collectionID VARCHAR (100) NOT NULL REFERENCES Collection(collectionID))',
+  'Collection(collectionID VARCHAR (100) NOT NULL, notes VARCHAR (1000), isWatched BOOL, rating DOUBLE(2,1), PRIMARY KEY (collectionID))',
+  'HasNotes(titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID), collectionID VARCHAR (100) NOT NULL REFERENCES Collection(collectionID), PRIMARY KEY (titleID, collectionID))',
 ]
 for (let query of create_table_query) {
   db_conn.query("CREATE TABLE IF NOT EXISTS " + query, (error) => {
@@ -70,7 +80,61 @@ for (let medium of media) {
 }
 
 db_conn.query("SELECT * FROM Media;", (error, results, fields) => {
-  console.log(results);
+  //console.log(results);
+})
+
+let crews = [
+  "'vfg', 'Victor Fleming', 'Director'",
+  "'gcr', 'George Cukor', 'Director'",
+  "'ffc', 'Francis Ford Coppola', 'Director'",
+  "'fdt', 'Frank Darabont', 'Director'",
+  "'cnn', 'Christopher Nolan', 'Director'",
+  "'jcn', 'James Cameron', 'Director'",
+]
+
+for (let crew of crews) {
+  db_conn.query("INSERT INTO Crew Values(" + crew + ");", (error) => {
+    if(error) {
+      if (error.code == 'ER_DUP_ENTRY') {
+        console.log(crew + " already inserted")
+      } else {
+        throw error
+      }
+    } else {
+      console.log("Completed insertion " + crew);
+    }
+  });
+}
+
+db_conn.query("SELECT * FROM Crew;", (error, results, fields) => {
+  //console.log(results);
+})
+
+let produces = [
+  "'vfg', 'gww'",
+  "'gcr', 'gww'",
+  "'ffc', 'tgf'",
+  "'fdt', 'tsr'",
+  "'cnn', 'tdk'",
+  "'jcn', 'ttc'",
+]
+
+for (let produce of produces) {
+  db_conn.query("INSERT INTO Produced Values(" + produce + ");", (error) => {
+    if(error) {
+      if (error.code == 'ER_DUP_ENTRY') {
+        console.log(produce + " already inserted")
+      } else {
+        throw error
+      }
+    } else {
+      console.log("Completed insertion " + produce);
+    }
+  });
+}
+
+db_conn.query("SELECT * FROM Produced;", (error, results, fields) => {
+  //console.log(results);
 })
 
 db_conn.end()
