@@ -32,26 +32,44 @@ let create_table_query = [
   'Crew(crewID VARCHAR (100) NOT NULL, name VARCHAR (100), role VARCHAR (100))',
   'Produced(crewID VARCHAR (100) NOT NULL REFERENCES Crew(crewID), titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID))',
   
-  'Cast(castID VARCHAR (100) NOT NULL, name VARCHAR (100) NOT NULL, character VARCHAR (100))',
-  'PlaysIn(castID VARCHAR (100) NOT NULL REFERENCES Cast(castID), titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID))',
+  'Role(roleID VARCHAR (100) NOT NULL, name VARCHAR (100) NOT NULL, characterName VARCHAR (100))',
+  'PlaysIn(roleID VARCHAR (100) NOT NULL REFERENCES Role(roleID), titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID))',
 
   'Collection(collectionID VARCHAR (100) NOT NULL, notes VARCHAR (1000), isWatched BOOL, rating DOUBLE(2,1))',
   'HasNotes(titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID), collectionID VARCHAR (100) NOT NULL REFERENCES Collection(collectionID))',
 ]
-for (query of create_table_query) {
-  db_conn.query("CREATE TABLE " + query, (error) => {
+for (let query of create_table_query) {
+  db_conn.query("CREATE TABLE IF NOT EXISTS " + query, (error) => {
     if(error) throw error;
-    console.log("Created Table " + query);
+    //console.log("Created Table " + query);
   });
 }
 
 // SAMPLE DATA INSERTION, IF THEY DON'T ALREADY EXIST
 
-db_conn.query("INSERT INTO Movie VALUES('ABC', 7.8, '2023-03-04');")
-db_conn.query("INSERT INTO Movie VALUES('DEF', 8.1, '2022-01-15');")
-db_conn.query("INSERT INTO Movie VALUES('XYZ', 9.9, '2020-06-30');")
+let media = [
+  "'gww', 'Gone With the Wind', '1939-11-01', 9.8, 10923",
+  "'tgf', 'The Godfather', '1972-05-16', 9.5, 11998",
+  "'tsr', 'The Shawshank Redemption', '1994-06-07', 9.8, 17789",
+  "'tdk', 'The Dark Knight', '2008-10-19', 8.7, 20912",
+  "'ttc', 'Titanic', '1997-03-03', 9.3, 14384"
+]
 
-db_conn.query("SELECT * FROM Movie;", (error, results, fields) => {
+for (let medium of media) {
+  db_conn.query("INSERT INTO Media Values(" + medium + ");", (error) => {
+    if(error) {
+      if (error.code == 'ER_DUP_ENTRY') {
+        console.log(medium + " already inserted")
+      } else {
+        throw error
+      }
+    } else {
+      console.log("Completed insertion " + medium);
+    }
+  });
+}
+
+db_conn.query("SELECT * FROM Media;", (error, results, fields) => {
   console.log(results);
 })
 
