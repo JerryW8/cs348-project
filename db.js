@@ -37,7 +37,7 @@ db_conn.query(useQuery);
 // TABLE CREATION, IF THEY DON'T ALREADY EXIST
 
 let create_table_query = [
-  'Media(titleID VARCHAR(100) NOT NULL, originalTitle VARCHAR(100), startYear DATE, rating DOUBLE(2,1), numVotes INT, PRIMARY KEY (titleID))',
+  'Media(titleID VARCHAR(100) NOT NULL, originalTitle VARCHAR(100), genre VARCHAR(100), startYear DATE, rating DOUBLE(2,1), numVotes INT, PRIMARY KEY (titleID))',
   
   'Crew(crewID VARCHAR (100) NOT NULL, name VARCHAR (100), role VARCHAR (100), PRIMARY KEY (crewID))',
   'Produced(crewID VARCHAR (100) NOT NULL REFERENCES Crew(crewID), titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID), PRIMARY KEY (crewID, titleID))',
@@ -58,23 +58,23 @@ for (let query of create_table_query) {
 // SAMPLE DATA INSERTION, IF THEY DON'T ALREADY EXIST
 
 let media = [
-  "'gww', 'Gone With the Wind', '1939-11-01', 9.8, 10923",
-  "'tgf', 'The Godfather', '1972-05-16', 9.5, 11998",
-  "'tsr', 'The Shawshank Redemption', '1994-06-07', 9.8, 17789",
-  "'tdk', 'The Dark Knight', '2008-10-19', 8.7, 20912",
-  "'ttc', 'Titanic', '1997-03-03', 9.3, 14384"
+  "'gww', 'Gone With the Wind', 'Romance', '1939-11-01', 9.8, 10923",
+  "'tgf', 'The Godfather', 'Drama', '1972-05-16', 9.5, 11998",
+  "'tsr', 'The Shawshank Redemption', 'Drama', '1994-06-07', 9.8, 17789",
+  "'tdk', 'The Dark Knight', 'Action', '2008-10-19', 8.7, 20912",
+  "'ttc', 'Titanic', 'Romance', '1997-03-03', 9.3, 14384"
 ]
 
-for (let medium of media) {
-  db_conn.query("INSERT INTO Media Values(" + medium + ");", (error) => {
+for (let i of media) {
+  db_conn.query("INSERT INTO Media Values(" + i + ");", (error) => {
     if(error) {
       if (error.code == 'ER_DUP_ENTRY') {
-        console.log(medium + " already inserted")
+        console.log(i + " already inserted")
       } else {
         throw error
       }
     } else {
-      console.log("Completed insertion " + medium);
+      console.log("Completed insertion " + i);
     }
   });
 }
@@ -92,16 +92,16 @@ let crews = [
   "'jcn', 'James Cameron', 'Director'",
 ]
 
-for (let crew of crews) {
-  db_conn.query("INSERT INTO Crew Values(" + crew + ");", (error) => {
+for (let i of crews) {
+  db_conn.query("INSERT INTO Crew Values(" + i + ");", (error) => {
     if(error) {
       if (error.code == 'ER_DUP_ENTRY') {
-        console.log(crew + " already inserted")
+        console.log(i + " already inserted")
       } else {
         throw error
       }
     } else {
-      console.log("Completed insertion " + crew);
+      console.log("Completed insertion " + i);
     }
   });
 }
@@ -119,16 +119,16 @@ let produces = [
   "'jcn', 'ttc'",
 ]
 
-for (let produce of produces) {
-  db_conn.query("INSERT INTO Produced Values(" + produce + ");", (error) => {
+for (let i of produces) {
+  db_conn.query("INSERT INTO Produced Values(" + i + ");", (error) => {
     if(error) {
       if (error.code == 'ER_DUP_ENTRY') {
-        console.log(produce + " already inserted")
+        console.log(i + " already inserted")
       } else {
         throw error
       }
     } else {
-      console.log("Completed insertion " + produce);
+      console.log("Completed insertion " + i);
     }
   });
 }
@@ -137,33 +137,97 @@ db_conn.query("SELECT * FROM Produced;", (error, results, fields) => {
   //console.log(results);
 })
 
+let roles = [
+  "'0', 'Vivien Leigh', 'Scarlett OHara'",
+  "'1', 'Clark Gable', 'Rhett Butler'",
+  "'2', 'Al Pacino', 'Michael Corleone'",
+  "'3', 'Marlon Brando', 'Vito Corleone'",
+  "'4', 'Morgan Freeman', 'Ellis Boyd Redding'",
+  "'5', 'Tim Robbins', 'Dufresne'",
+  "'6', 'Christian Bale', 'Batman'",
+  "'7', 'Michael Caine', 'Alfred'",
+  "'8', 'Leonardo DiCaprio', 'Jack Dawson'",
+  "'9', 'Kate Winslet', 'Rose Dewitt Bukater'"
+]
+
+for (let i of roles) {
+  db_conn.query("INSERT INTO Role Values(" + i + ");", (error) => {
+    if(error) {
+      if (error.code == 'ER_DUP_ENTRY') {
+        console.log(i + " already inserted")
+      } else {
+        throw error
+      }
+    } else {
+      console.log("Completed insertion " + i);
+    }
+  });
+}
+
+let playins = [
+  "'0', 'gww'",
+  "'1', 'gww'",
+  "'2', 'tgf'",
+  "'3', 'tgf'",
+  "'4', 'tsr'",
+  "'5', 'tsr'",
+  "'6', 'tdk'",
+  "'7', 'tdk'",
+  "'8', 'ttc'",
+  "'9', 'ttc'",
+]
+
+for (let i of playins) {
+  db_conn.query("INSERT INTO PlaysIn Values(" + i + ");", (error) => {
+    if(error) {
+      if (error.code == 'ER_DUP_ENTRY') {
+        console.log(i + " already inserted")
+      } else {
+        throw error
+      }
+    } else {
+      console.log("Completed insertion " + i);
+    }
+  });
+}
+
+let collection = [
+  "'c0', 'Pretty good', true, 8.9",
+  "'c1', 'Good', true, 7.6"
+]
+
+for (let i of collection) {
+  db_conn.query("INSERT INTO Collection Values(" + i + ");", (error) => {
+    if(error) {
+      if (error.code == 'ER_DUP_ENTRY') {
+        console.log(i + " already inserted")
+      } else {
+        throw error
+      }
+    } else {
+      console.log("Completed insertion " + i);
+    }
+  });
+}
+
+let hasNotes = [
+  "'tdk', 'c0'",
+  "'ttc', 'c1'"
+]
+
+for (let i of hasNotes) {
+  db_conn.query("INSERT INTO HasNotes Values(" + i + ");", (error) => {
+    if(error) {
+      if (error.code == 'ER_DUP_ENTRY') {
+        console.log(i + " already inserted")
+      } else {
+        throw error
+      }
+    } else {
+      console.log("Completed insertion " + i);
+    }
+  });
+}
+
 db_conn.end()
   
-/*
-db_conn.query(create_query, (err) => {
-    if(err) throw err;
-
-    console.log("Database Created Successfully!");
-
-     let use_query = `USE ${db_name}`;
-    db_conn.query(use_query, (error) => {
-        if(error) throw error;
-
-        console.log("Using Database");
-    });
-
-    let create_table_query = 'CREATE TABLE IF NOT EXISTS Movie(title VARCHAR(100) NOT NULL, rating DOUBLE(2,1) NOT NULL, release_date DATE NOT NULL);'
-    db_conn.query(create_table_query, (error) => {
-      if(error) throw error;
-      console.log("Created Table");
-    });
-
-    db_conn.query("INSERT INTO Movie VALUES('ABC', 7.8, '2023-03-04');")
-    db_conn.query("INSERT INTO Movie VALUES('DEF', 8.1, '2022-01-15');")
-    db_conn.query("INSERT INTO Movie VALUES('XYZ', 9.9, '2020-06-30');")
-    
-    // console.log(db_conn.query("SELECT * FROM Movie;"))
-});
-  
-module.exports = db_conn;
-*/
