@@ -1,4 +1,5 @@
 const mysql = require("mysql")
+const express = require("express");
 
 function dropTables() {
   db_conn.query("DROP TABLE Media");
@@ -230,3 +231,9 @@ for (let i of hasNotes) {
 }
 
 db_conn.end()
+
+const app = express();
+  
+app.listen(5000, () => {
+  console.log(`Server is up and running on 5000 ...`);
+});
