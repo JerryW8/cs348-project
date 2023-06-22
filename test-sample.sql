@@ -27,6 +27,7 @@ DELETE FROM Collection WHERE collectionID = "c1"
 -- NOTE: "Romance" and "ttc" are just place holders
 SELECT * FROM media WHERE genre = "Romance" AND rating >= 8.5 AND titleID <> "ttc"
 
+
 -- Gets the crew members who produced the media and their other films
 -- NOTE: "tgf" is just a placeholder
 SELECT * FROM Crew
