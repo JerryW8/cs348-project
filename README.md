@@ -19,3 +19,9 @@ to load the database.
 MILESTONE 1
 
 We have provided buttons for the features on the home page, which load the query results after they are clicked into the page and the terminal.
+
+You can run 
+```
+node db.js
+```
+to test the project at localhost:3000.
