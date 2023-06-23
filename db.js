@@ -235,16 +235,15 @@ const app = express();
 app.set('views', './views');
 app.set('view engine', 'ejs')
 
-// Select movies
-app.get('/allmovies', (req, res) => {
-    let sql = 'SELECT * FROM Media';
+// Select movies in genre
+app.get('/genre/:genre', (req, res) => {
+    let sql = `SELECT * FROM media WHERE genre = "${req.params.genre}"`;
     let query = db_conn.query(sql, (err, result) => {
         if (err) throw err;
         console.log(result);
-        res.send('All movies found.');
+        res.send(`All Media with ${req.params.genre} found in database. \n ${JSON.stringify(result)}`);
     });
 });
-
 
 // Find movie
 app.get("/movies/:title", (req, res) => {
@@ -253,6 +252,16 @@ app.get("/movies/:title", (req, res) => {
         if (err) throw err;
         console.log(result);
         res.send(`${req.params.title} found in database. \n ${JSON.stringify(result)}`);
+    });
+});
+
+// Find movie
+app.get("/rating/:rating", (req, res) => {
+    let sql = `SELECT * FROM media WHERE rating >= "${req.params.rating}"`;
+    let query = db_conn.query(sql, (err, result) => {
+        if (err) throw err;
+        console.log(result);
+        res.send(`Media with at least ${req.params.rating} found in database. \n ${JSON.stringify(result)}`);
     });
 });
 
