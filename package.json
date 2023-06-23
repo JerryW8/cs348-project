@@ -2,17 +2,19 @@
   "name": "cs348-project",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "db.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "db": "node db.js",
-    "start": "node server.js"
+    "start": "node db.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ejs": "^3.1.9",
     "express": "^4.18.2",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.22",
+    "path": "^0.12.7"
   }
 }

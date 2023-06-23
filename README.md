@@ -15,3 +15,7 @@ Enter 'cs348cs348' as your password. Then run
 node db
 ```
 to load the database.
+
+MILESTONE 1
+
+We have provided buttons for the features on the home page, which load the query results after they are clicked into the page and the terminal.
