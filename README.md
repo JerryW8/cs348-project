@@ -7,8 +7,10 @@ mysql_secure_installation
 mysql -u root -p
 ```
 
+Installing Python dependencies
 ```
 python3 -m pip install mysql-connector-python
+python3 -m pip install pandas
 python3 populate.py
 ```
 
