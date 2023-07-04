@@ -64,8 +64,8 @@ def populateCrew():
         except Exception as e:
             print(f"Produced ERROR: {e}")
 
-#populateMovies()
-#populateCast()
+populateMovies()
+populateCast()
 populateCrew()
 
 cursor.execute("SELECT * FROM Produced")
