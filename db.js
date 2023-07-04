@@ -37,9 +37,9 @@ let useQuery = `USE ${db_name}`;
 db_conn.query(useQuery);
 
 // TABLE CREATION, IF THEY DON'T ALREADY EXIST
-
+//dropTables()
 let create_table_query = [
-    'Media(titleID VARCHAR(100) NOT NULL, originalTitle VARCHAR(100), genre VARCHAR(100), startYear DATE, rating DOUBLE(2,1), numVotes INT, PRIMARY KEY (titleID))',
+    'Media(titleID VARCHAR(100) NOT NULL, originalTitle VARCHAR(100), genre VARCHAR(100), startYear INT, rating DOUBLE(2,1), numVotes INT, PRIMARY KEY (titleID))',
 
     'Crew(crewID VARCHAR (100) NOT NULL, name VARCHAR (100), role VARCHAR (100), PRIMARY KEY (crewID))',
     'Produced(crewID VARCHAR (100) NOT NULL REFERENCES Crew(crewID), titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID), PRIMARY KEY (crewID, titleID))',
@@ -53,12 +53,12 @@ let create_table_query = [
 for (let query of create_table_query) {
     db_conn.query("CREATE TABLE IF NOT EXISTS " + query, (error) => {
         if (error) throw error;
-        //console.log("Created Table " + query);
+        console.log("Created Table " + query);
     });
 }
 
 // SAMPLE DATA INSERTION, IF THEY DON'T ALREADY EXIST
-
+/*
 let media = [
     "'gww', 'Gone With the Wind', 'Romance', '1939-11-01', 9.8, 10923",
     "'tgf', 'The Godfather', 'Drama', '1972-05-16', 9.5, 11998",
@@ -230,6 +230,7 @@ for (let i of hasNotes) {
         }
     });
 }
+*/
 
 const app = express();
 app.set('views', './views');

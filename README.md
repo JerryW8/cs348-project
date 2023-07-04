@@ -5,6 +5,11 @@ mysql_secure_installation
 mysql -u root -p
 ```
 
+```
+python3 -m pip install mysql-connector-python
+python3 populate.py
+```
+
 Install necessary dependencies by running
 ```
 npm install
