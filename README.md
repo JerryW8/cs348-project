@@ -1,3 +1,5 @@
+*ALL data in this project provided by IMDb: https://developer.imdb.com/non-commercial-datasets/*
+
 Getting mysql running on Mac after installing mysql
 ```
 mysql.server start
