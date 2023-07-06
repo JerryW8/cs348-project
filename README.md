@@ -8,26 +8,21 @@ mysql -u root -p
 ```
 Enter cs348cs348 as your password.
 
-Installing dependencies
+Installing dependencies:
 ```
 python3 -m pip install mysql-connector-python
 python3 -m pip install pandas
 npm i
 ```
 
-Initiate tables by running
+Initiate tables:
 ```
 node run init
-```
-
-Then run
-```
 node run populate
 ```
-to populate the database.
 
-You can run 
+Start app:
 ```
 node run start
 ```
-to test the project at localhost:3000. As this project is updated you may need to clear your browser cache.
+As this project is updated you may need to clear your browser cache.
