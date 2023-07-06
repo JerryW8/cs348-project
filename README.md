@@ -6,31 +6,28 @@ mysql.server start
 mysql_secure_installation
 mysql -u root -p
 ```
+Enter cs348cs348 as your password.
 
-Installing Python dependencies
+Installing dependencies
 ```
 python3 -m pip install mysql-connector-python
 python3 -m pip install pandas
-python3 populate.py
+npm i
 ```
 
-Install necessary dependencies by running
+Initiate tables by running
 ```
-npm install
+node run init
 ```
 
-Enter 'cs348cs348' as your password. Then run
+Then run
 ```
-node db
+node run populate
 ```
-to load the database.
-
-MILESTONE 1
-
-We have provided buttons for the features on the home page, which load the query results after they are clicked into the page and the terminal.
+to populate the database.
 
 You can run 
 ```
-node db.js
+node run start
 ```
-to test the project at localhost:3000.
+to test the project at localhost:3000. As this project is updated you may need to clear your browser cache.

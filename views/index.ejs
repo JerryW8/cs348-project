@@ -10,15 +10,15 @@
 <body>
     <h1>Our page content will go here.</h1>
     <form action="/movies/titanic" method = "get">
-        <button type="button" onclick="window.location.href = 'http://127.0.0.1:3000/movies/titanic';">Find movie with title: Titanic</button>
+        <button type="button" onclick="window.location.href = 'http://127.0.0.1:3000/media?title=titanic';">Find movie with title: Titanic</button>
     </form>
     <br>
     <form action="/genre/drama" method = "get">
-        <button type="button" onclick="window.location.href = 'http://127.0.0.1:3000/genre/drama';">Find Media with genre: Drama</button>
+        <button type="button" onclick="window.location.href = 'http://127.0.0.1:3000/media?genre=drama';">Find Media with genre: Drama</button>
     </form>
     <br>
     <form action="/rating/8.0" method = "get">
-        <button type="button" onclick="window.location.href = 'http://127.0.0.1:3000/rating/8.0';">Find Media with rating >= 8.0</button>
+        <button type="button" onclick="window.location.href = 'http://127.0.0.1:3000/media?rating=8.0';">Find Media with rating >= 8.0</button>
     </form>
 </body>
 </html>

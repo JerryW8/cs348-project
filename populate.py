@@ -42,7 +42,7 @@ def populateCast():
         except Exception as e:
             print(f"ROLE ERROR: {e}")
         try:
-            query = f"INSERT INTO PlaysIn Values('{tid}', '{rid}')"
+            query = f"INSERT INTO PlaysIn Values('{rid}', '{tid}')"
             cursor.execute(query)
         except Exception as e:
             print(f"PlaysIn ERROR: {e}")

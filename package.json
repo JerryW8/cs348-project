@@ -4,8 +4,9 @@
   "description": "",
   "main": "db.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node db.js"
+    "init": "node db.js",
+    "populate": "python3 populate.py",
+    "start": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
