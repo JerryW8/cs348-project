@@ -9,7 +9,7 @@ cnx = mysql.connector.connect(user='root', password='cs348cs348',
 cursor = cnx.cursor()
 
 def populateMovies():
-    cursor.execute("DELETE * FROM Media")
+    cursor.execute("DELETE FROM Media")
     df = pd.read_csv(os.path.join('data', 'title.movies.tsv'), sep='\t', na_values=['\\N'])
     for index, row in df.iterrows():
         tid = row['tconst']
@@ -23,6 +23,9 @@ def populateMovies():
             cursor.execute(query)
         except Exception as e:
             print(f"MEDIA ERROR: {e}")
+        if index % 5000 == 0:
+            cnx.commit()
+    cnx.commit()
 
 def populateCast():
     cursor.execute("DELETE FROM Role")
@@ -43,6 +46,9 @@ def populateCast():
             cursor.execute(query)
         except Exception as e:
             print(f"PlaysIn ERROR: {e}")
+        if index % 5000 == 0:
+            cnx.commit()
+    cnx.commit()
 
 def populateCrew():
     cursor.execute("DELETE FROM Crew")
@@ -63,10 +69,16 @@ def populateCrew():
             cursor.execute(query)
         except Exception as e:
             print(f"Produced ERROR: {e}")
+        if index % 5000 == 0:
+            cnx.commit()
+    cnx.commit()
 
 populateMovies()
+print("Populated media")
 populateCast()
+print("Populated cast")
 populateCrew()
+print("Populated crew")
 
 cursor.execute("SELECT * FROM Produced")
 rows = cursor.fetchall()
