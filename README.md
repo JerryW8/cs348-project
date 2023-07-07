@@ -20,6 +20,7 @@ Initiate tables:
 node run init
 node run populate
 ```
+Some of the data will not be able to fit into the schema and as a result will fail to be loaded.
 
 Start app:
 ```
