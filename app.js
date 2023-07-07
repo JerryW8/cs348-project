@@ -53,11 +53,45 @@ app.get('/media', (req, res) => {
 app.get('/media/:titleid', (req, res) => {
     let castsql = `SELECT name, characterName FROM PlaysIn NATURAL JOIN Role WHERE PlaysIn.titleID = "${req.params.titleid}"`;
     let crewsql = `SELECT name, role FROM Produced NATURAL JOIN Crew WHERE Produced.titleID = "${req.params.titleid}"`
+    let similarsql = `SELECT m1.titleID, m1.originalTitle FROM Media m1, Media m2 
+                        WHERE m2.titleID = "${req.params.titleid}" AND m1.genre = m2.genre AND m1.rating >= 7.5 LIMIT 10`
+    let sameCrewsql = `SELECT DISTINCT titleID, originalTitle FROM Crew
+                        NATURAL JOIN Produced
+                        NATURAL JOIN Media
+                        WHERE RIGHT(crewID, 9) IN (SELECT RIGHT(crewID, 9) FROM Produced WHERE titleID = "${req.params.titleid}")
+                        AND titleID <>"${req.params.titleid}"
+                        LIMIT 10`
+    let sameCastsql = `SELECT DISTINCT titleID, originalTitle FROM Role
+                        NATURAL JOIN PlaysIn
+                        NATURAL JOIN Media
+                        WHERE RIGHT(roleID, 9) IN (SELECT RIGHT(roleID, 9) FROM PlaysIn WHERE titleID = "${req.params.titleid}")
+                        AND titleID <>"${req.params.titleid}"
+                        LIMIT 10`
+    
     db_conn.query(castsql, (err, castresult) => {
         if (err) throw err;
         db_conn.query(crewsql, (err, crewresult) => {
             if (err) throw err
-            res.send(`${JSON.stringify(castresult)} <br> ${JSON.stringify(crewresult)}`);
+            db_conn.query(similarsql, (err, similarresult) => {
+                if (err) throw err
+                db_conn.query(sameCrewsql, (err, samecrewresult) => {
+                    if (err) throw err
+                    db_conn.query(sameCastsql, (err, samecastresult) => {
+                        if (err) throw err
+                        res.send(
+                        `Cast: ${JSON.stringify(castresult)} 
+                        <br><br>
+                        Crew: ${JSON.stringify(crewresult)}
+                        <br><br>
+                        Recommended movies if you like this: ${JSON.stringify(similarresult)}
+                        <br><br>
+                        Other movies with similar crew: ${JSON.stringify(samecrewresult)}
+                        <br><br>
+                        Other movies with similar cast: ${JSON.stringify(samecastresult)}
+                        `);
+                    });
+                });
+            });
         });
     });
 

@@ -31,14 +31,20 @@ SELECT * FROM media WHERE genre = "Romance" AND rating >= 8.5 AND titleID <> "tt
 -- Gets the crew members who produced the media and their other films
 -- NOTE: "tgf" is just a placeholder
 SELECT * FROM Crew
-  NATURAL JOIN Produced
-  NATURAL JOIN Media
-  WHERE crewID IN (SELECT crewID FROM Produced WHERE titleID = "tgf")
+ 	NATURAL JOIN Produced
+ 	NATURAL JOIN Media
+ 	WHERE RIGHT(CrewID, 9) IN 
+  (SELECT RIGHT(crewID, 9) FROM PRODUCED 
+  WHERE titleID = “tgf”) AND titleID <> “tgf”
+
 
 -- Gets the actors who played in the media and their other films
 -- NOTE: "tgf" is just a placeholder
 SELECT * FROM Role
-  NATURAL JOIN PlaysIn
-  NATURAL JOIN Media
-  WHERE roleID IN (SELECT roleID FROM PlaysIn WHERE titleID = "tgf")
+ 	NATURAL JOIN PlaysIn
+ 	NATURAL JOIN Media
+ 	WHERE RIGHT(roleID, 9) IN 
+  (SELECT RIGHT(roleID, 9) FROM PlaysIn 
+  WHERE titleID = ”tgf”) AND titleID <> “tgf”
+
 
