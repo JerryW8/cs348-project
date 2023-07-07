@@ -37,7 +37,7 @@ let useQuery = `USE ${db_name}`;
 db_conn.query(useQuery);
 
 // TABLE CREATION, IF THEY DON'T ALREADY EXIST
-//dropTables()
+// dropTables()
 let create_table_query = [
     'Media(titleID VARCHAR(100) NOT NULL, originalTitle VARCHAR(100), genre VARCHAR(100), startYear INT, rating DOUBLE(2,1), numVotes INT, PRIMARY KEY (titleID))',
 
@@ -47,8 +47,8 @@ let create_table_query = [
     'Role(roleID VARCHAR (100) NOT NULL, name VARCHAR (100) NOT NULL, characterName VARCHAR (100), PRIMARY KEY (roleID))',
     'PlaysIn(roleID VARCHAR (100) NOT NULL REFERENCES Role(roleID), titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID), PRIMARY KEY (roleID, titleID))',
 
-    'Collection(collectionID VARCHAR (100) NOT NULL, notes VARCHAR (1000), isWatched BOOL, rating DOUBLE(2,1), PRIMARY KEY (collectionID))',
-    'HasNotes(titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID), collectionID VARCHAR (100) NOT NULL REFERENCES Collection(collectionID), PRIMARY KEY (titleID, collectionID))',
+    'Collection(collectionID INT NOT NULL AUTO_INCREMENT, notes VARCHAR (1000), isWatched BOOL, rating DOUBLE(2,1), PRIMARY KEY (collectionID))',
+    'HasNotes(titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID), collectionID INT NOT NULL REFERENCES Collection(collectionID), PRIMARY KEY (titleID, collectionID))',
 ]
 for (let query of create_table_query) {
     db_conn.query("CREATE TABLE IF NOT EXISTS " + query, (error) => {
