@@ -73,14 +73,36 @@ def populateCrew():
             cnx.commit()
     cnx.commit()
 
+def populateCollection():
+    cursor.execute("DELETE FROM Collection")
+    cursor.execute("DELETE FROM HasNotes")
+    collectionQueries = [
+        "'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc id semper libero, sed rhoncus nulla. Maecenas porta faucibus purus, tempus volutpat leo molestie at. Nullam imperdiet bibendum diam, ac aliquet enim placerat et. Mauris pulvinar suscipit bibendum. Morbi non placerat libero. Vestibulum rutrum dignissim tincidunt.', true, 7.8",
+        "'Proin lectus felis, tincidunt vitae lacus a, placerat ornare leo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean lectus risus, congue id congue et, suscipit et turpis. Vivamus tempor eu libero id ultricies. Nulla faucibus finibus porttitor. Nulla viverra vitae leo vitae hendrerit.', true, 9.6",
+        "'Nulla viverra vitae leo vitae hendrerit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi fringilla, mi sit amet fringilla consectetur, nibh justo lacinia libero, quis sodales lacus nunc non lacus. In hac habitasse platea dictumst.', false, NULL",
+        "'Praesent mattis nisl vel enim malesuada congue. Integer interdum congue massa non consequat. Morbi convallis interdum tortor sit amet vehicula. Etiam convallis, lectus et molestie sagittis, metus lacus ultricies enim, vitae condimentum nisl diam vel sapien.', true, 4.5",
+        "'Praesent viverra vitae nibh at varius. Phasellus sit amet quam vitae tellus dapibus sollicitudin at non enim. Sed scelerisque in dolor in fermentum. Nam convallis nisi id tellus bibendum tincidunt. Duis vehicula, ex consectetur sagittis commodo, justo ex vehicula purus, vel pulvinar mi mi at metus. Nullam a rutrum magna.', false, NULL"
+    ]
+    correspondingTitleIDs = [
+        "tt2582802", "tt6751668", "tt0816692", "tt7784604", "tt0780504"
+    ]
+    for idx, query in enumerate(collectionQueries):
+        cursor.execute(f"INSERT INTO Collection Values(0, {query})")
+        cursor.execute(f"INSERT INTO HasNotes Values('{correspondingTitleIDs[idx]}', {cursor.lastrowid})")
+    cnx.commit()
+
+
+
 populateMovies()
 print("Populated media")
 populateCast()
 print("Populated cast")
 populateCrew()
 print("Populated crew")
+populateCollection()
+print("Populated collection")
 
-cursor.execute("SELECT * FROM Produced")
+cursor.execute("SELECT * FROM HasNotes")
 rows = cursor.fetchall()
 with open("test.out", 'w') as file:
     for row in rows:
