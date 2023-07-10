@@ -1,0 +1,88 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Our main page">
+    <link href="/css/styles.css" rel="stylesheet" type="text/css">
+    <title>CS 348 IMDB Project</title>
+</head>
+
+
+<body>
+    <div class="media-title">
+        <center> 
+            <h2><label for="media"><%- title.originalTitle %></label></h2><br>
+        </center>
+    </div>
+    <div class="media-info">
+        <% if(cast && cast.length != 0) { %>
+            The cast of the movie included 
+            <% for(var i=0; i < cast.length - 1; i++) { %>
+                <%- cast[i].characterName.slice(-1) === "\"" ? cast[i].characterName.slice(0, -1) : cast[i].characterName %> played by  <%- cast[i].name %>,
+            <% } %>
+            <%- cast[cast.length - 1].characterName %> played by <%- cast[cast.length - 1].name %>.
+            <br><br>
+        <% } %>
+        <% if(crew && crew.length > 0) { %>
+            The crew of the movie included 
+            <% for(var i=0; i < crew.length - 1; i++) { %>
+                <%= crew[i].name.slice(-1) === "\"" ? crew[i].name.slice(0, -1) : crew[i].name %> as <%- crew[i].role %>
+            <% } %>
+            <%- crew[crew.length - 1].name %> as <%- crew[crew.length - 1].role %>.
+            <br><br>
+        <% } %>
+        <% if(similarMedia || similarMedia.length == 0) { %>
+            Recommended movies/TV shows if you like this:
+            <table>
+                <tr>
+                    <th>Title</th>
+                </tr>
+                <% if(similarMedia) { %>
+                    <% for(var i=0; i < similarMedia.length; i++) { %>
+                        <tr class="card">
+                            <td> <a href="/media/<%= similarMedia[i].titleID %>"> <%- similarMedia[i].originalTitle %> </a></td>
+                        </tr>
+                    <% } %>
+                <% } %>
+            </table>
+            <br><br>
+        <% } %>
+        <% if(similarCrew) { %>
+            Other movies with similar crew:
+            <table>
+                <tr>
+                    <th>Title</th>
+                </tr>
+                <% if(similarCrew) { %>
+                    <% for(var i=0; i < similarCrew.length; i++) { %>
+                        <tr class="card">
+                            <td> <a href="/media/<%= similarCrew[i].titleID %>"> <%- similarCrew[i].originalTitle %> </a></td>
+                        </tr>
+                    <% } %>
+                <% } %>
+            </table>
+            <br><br>
+        <% } %>
+        <% if(similarCast) { %>
+            Other movies with similar cast:
+            <table>
+                <tr>
+                    <th>Title</th>
+                </tr>
+                <% if(similarCast) { %>
+                    <% for(var i=0; i < similarCast.length; i++) { %>
+                        <tr class="card">
+                            <td> <a href="/media/<%= similarCast[i].titleID %>"> <%- similarCast[i].originalTitle %> </a></td>
+                        </tr>
+                    <% } %>
+                <% } %>
+            </table>
+        <% } %>
+    </div>
+</body>
+
+</html>

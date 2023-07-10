@@ -3,22 +3,53 @@
 <html lang="en">
 
 <head>
-    <title>CS 348 IMDB Project</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Our main page">
+    <link href="/css/styles.css" rel="stylesheet" type="text/css">
+    <title>CS 348 IMDB Project</title>
 </head>
 
 <body>
-    <h1>Our page content will go here.</h1>
-    <form action="/movies/titanic" method = "get">
-        <button type="button" onclick="window.location.href = 'http://127.0.0.1:3000/media?title=titanic';">Find movie with title: Titanic</button>
-    </form>
-    <br>
-    <form action="/genre/drama" method = "get">
-        <button type="button" onclick="window.location.href = 'http://127.0.0.1:3000/media?genre=drama';">Find Media with genre: Drama</button>
-    </form>
-    <br>
-    <form action="/rating/8.0" method = "get">
-        <button type="button" onclick="window.location.href = 'http://127.0.0.1:3000/media?rating=8.0';">Find Media with rating >= 8.0</button>
-    </form>
+    <div class="search-wrapper">
+        <center> 
+            <h1><label for="search">Search Movies and TV Shows</label></h1><br>
+        </center>
+        <form action="/media" method="get">
+            <label>Title:</label><br>
+            <input type="text" id="search" name="title"><br>
+            <label>Genre:</label><br>
+            <input type="text" id="search" name="genre"><br>
+            <label>Start or Release Year:</label><br>
+            <input type="text" id="search" name="year"><br>
+            <label>Minimum IMDB Rating:</label><br>
+            <input type="text" id="search" name="rating"><br>
+            <input type="submit" value="Search">
+        </form>
+    </div>
+    <div class="media-cards">
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Start/Release Year</th>
+                <th>Rating</th>
+                <th>Number of IMDB Votes</th>
+            </tr>
+            <% if(media) { %>
+                <% for(var i=0; i < media.length; i++) { %>
+                    <tr class="card">
+                        <td> <a href="/media/<%= media[i].titleID %>"> <%- media[i].originalTitle %> </a></td>
+                        <td> <%- media[i].genre %> </td>
+                        <td> <%- media[i].startYear %> </td>
+                        <td> <%- media[i].rating || "N/A" %> </td>
+                        <td> <%- media[i].numVotes || "N/A" %> </td>
+                    </tr>
+                <% } %>
+            <% } %>
+        </table>
+    </div>
 </body>
+
 </html>
