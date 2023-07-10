@@ -60,11 +60,11 @@ for (let query of create_table_query) {
 // SAMPLE DATA INSERTION, IF THEY DON'T ALREADY EXIST
 /*
 let media = [
-    "'gww', 'Gone With the Wind', 'Romance', '1939-11-01', 9.8, 10923",
-    "'tgf', 'The Godfather', 'Drama', '1972-05-16', 9.5, 11998",
-    "'tsr', 'The Shawshank Redemption', 'Drama', '1994-06-07', 9.8, 17789",
-    "'tdk', 'The Dark Knight', 'Action', '2008-10-19', 8.7, 20912",
-    "'ttc', 'Titanic', 'Romance', '1997-03-03', 9.3, 14384"
+    "'gww', 'Gone With the Wind', 'Romance', '1939', 9.8, 10923",
+    "'tgf', 'The Godfather', 'Drama', '1972', 9.5, 11998",
+    "'tsr', 'The Shawshank Redemption', 'Drama', '1994', 9.8, 17789",
+    "'tdk', 'The Dark Knight', 'Action', '2008', 8.7, 20912",
+    "'ttc', 'Titanic', 'Romance', '1997', 9.3, 14384"
 ]
 
 for (let i of media) {
@@ -194,12 +194,13 @@ for (let i of playins) {
 }
 
 let collection = [
-    "'c0', 'Pretty good', true, 8.9",
-    "'c1', 'Good', true, 7.6"
+    "'Pretty good', true, 8.9",
+    "'Good', true, 7.6",
+    "'Boring', false, 6.5"
 ]
 
 for (let i of collection) {
-    db_conn.query("INSERT INTO Collection Values(" + i + ");", (error) => {
+    db_conn.query("INSERT INTO Collection(notes, isWatched, rating) Values(" + i + ");", (error) => {
         if (error) {
             if (error.code == 'ER_DUP_ENTRY') {
                 console.log(i + " already inserted")
@@ -213,8 +214,9 @@ for (let i of collection) {
 }
 
 let hasNotes = [
-    "'tdk', 'c0'",
-    "'ttc', 'c1'"
+    "'tdk', '1'",
+    "'ttc', '2'",
+    "'tgf', '3'"
 ]
 
 for (let i of hasNotes) {
