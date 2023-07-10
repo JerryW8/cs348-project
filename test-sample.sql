@@ -15,18 +15,9 @@ SELECT * FROM media WHERE rating >= 8.0
 SELECT * FROM media WHERE YEAR(startYear) >= 1997
 ORDER BY startYear DESC
 
--- Updates the collection with given information and collectionID
--- NOTE: "Not too bad" and "c0" are just place holders
-UPDATE Collection SET notes = "Not too bad" WHERE collectionID = "c0"
-
--- Delete an entry in collection with given collectionID
--- NOTE: "c1" is just a place holder
-DELETE FROM Collection WHERE collectionID = "c1"
-
 -- Gets the recommended media with given genre and given titileID
 -- NOTE: "Romance" and "ttc" are just place holders
 SELECT * FROM media WHERE genre = "Romance" AND rating >= 8.5 AND titleID <> "ttc"
-
 
 -- Gets the crew members who produced the media and their other films
 -- NOTE: "tgf" is just a placeholder
@@ -35,8 +26,7 @@ SELECT * FROM Crew
  	NATURAL JOIN Media
  	WHERE RIGHT(CrewID, 9) IN 
   (SELECT RIGHT(crewID, 9) FROM PRODUCED 
-  WHERE titleID = “tgf”) AND titleID <> “tgf”
-
+  WHERE titleID = "tgf") AND titleID <> "tgf"
 
 -- Gets the actors who played in the media and their other films
 -- NOTE: "tgf" is just a placeholder
@@ -45,6 +35,26 @@ SELECT * FROM Role
  	NATURAL JOIN Media
  	WHERE RIGHT(roleID, 9) IN 
   (SELECT RIGHT(roleID, 9) FROM PlaysIn 
-  WHERE titleID = ”tgf”) AND titleID <> “tgf”
+  WHERE titleID = "tgf") AND titleID <> "tgf"
 
+-- Add a movie to watchlist
+INSERT INTO Collection(collectionID) VALUES(NULL);
+INSERT INTO HasNotes VALUES("gww", 4);
 
+-- Remove a movie from watchlist
+DELETE FROM Collection WHERE collectionID = 1;
+DELETE FROM HasNotes WHERE collectionID = 1 AND titleID = "tdk";
+
+-- View media in the watchlist
+SELECT * FROM Collection 
+  NATURAL JOIN HasNotes h 
+  JOIN Media m ON h.titleID = m.titleID;
+
+-- Update the rating of a movie in the watchlist
+UPDATE Collection SET rating = 9.8 WHERE collectionID = 1;
+
+-- Update the notes of a movie in the watchlist
+UPDATE Collection SET notes = "Great movie!" WHERE collectionID = 2;
+
+-- Update whether the movie has been watched
+UPDATE Collection SET isWatched = true WHERE collectionID = 3;
