@@ -61,3 +61,24 @@ UPDATE Collection SET notes = "Great movie!" WHERE collectionID = 2;
 
 -- Update whether the movie has been watched
 UPDATE Collection SET isWatched = true WHERE collectionID = 3;
+
+-- Insert new movies into media
+INSERT INTO Media Values("tt0000000","sample media" , "sample genre", 2023, 0.0, 0);
+
+-- Update startYear of a given movie
+UPDATE Media SET startYear = 2000 WHERE titleID= "tt0000000";
+
+-- Update originalTitle of a given movie
+UPDATE Media SET originalTitle = "updated name for sample media" WHERE titleID = "tt0000000";
+
+-- Update genre of a given movie
+UPDATE Media SET genre = "new sample genre" WHERE titleID = "tt0000000";
+
+-- Update rating of a given movie
+UPDATE Media SET rating = 9.0 WHERE titleID = "tt0000000";
+
+-- Update numVotes of a given movie
+UPDATE Media SET numVotes= 1 WHERE titleID = "tt0000000";
+
+-- Delete a movie from the media
+DELETE FROM Media WHERE titleID = "tt0000000";
