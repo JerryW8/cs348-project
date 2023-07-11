@@ -1,27 +1,40 @@
+*ALL data in this project provided by IMDb: https://developer.imdb.com/non-commercial-datasets/*
+
 Getting mysql running on Mac after installing mysql
 ```
 mysql.server start
 mysql_secure_installation
 mysql -u root -p
 ```
+Enter cs348cs348 as your password.
 
-Install necessary dependencies by running
+---
+Installing dependencies:
 ```
-npm install
+python3 -m pip install mysql-connector-python
+python3 -m pip install pandas
+npm i
 ```
-
-Enter 'cs348cs348' as your password. Then run
+---
+Initiate tables:
 ```
-node db
+npm run init
+npm run populate
 ```
-to load the database.
-
-MILESTONE 1
-
-We have provided buttons for the features on the home page, which load the query results after they are clicked into the page and the terminal.
-
-You can run 
+or optionally you may instead run the equivalent literal commands
 ```
 node db.js
+python3 populate.py
 ```
-to test the project at localhost:3000.
+All warnings/errors can be safely ignored for now.
+
+---
+Start app:
+```
+npm run start
+```
+or optionally you may instead run the equivalent literal command
+```
+nodemon app.js
+```
+As this project is updated you may need to clear your browser cache.

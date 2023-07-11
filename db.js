@@ -37,9 +37,9 @@ let useQuery = `USE ${db_name}`;
 db_conn.query(useQuery);
 
 // TABLE CREATION, IF THEY DON'T ALREADY EXIST
-
+// dropTables()
 let create_table_query = [
-    'Media(titleID VARCHAR(100) NOT NULL, originalTitle VARCHAR(100), genre VARCHAR(100), startYear DATE, rating DOUBLE(2,1), numVotes INT, PRIMARY KEY (titleID))',
+    'Media(titleID VARCHAR(100) NOT NULL, originalTitle VARCHAR(100), genre VARCHAR(100), startYear INT, rating DOUBLE(2,1), numVotes INT, PRIMARY KEY (titleID))',
 
     'Crew(crewID VARCHAR (100) NOT NULL, name VARCHAR (100), role VARCHAR (100), PRIMARY KEY (crewID))',
     'Produced(crewID VARCHAR (100) NOT NULL REFERENCES Crew(crewID), titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID), PRIMARY KEY (crewID, titleID))',
@@ -47,24 +47,37 @@ let create_table_query = [
     'Role(roleID VARCHAR (100) NOT NULL, name VARCHAR (100) NOT NULL, characterName VARCHAR (100), PRIMARY KEY (roleID))',
     'PlaysIn(roleID VARCHAR (100) NOT NULL REFERENCES Role(roleID), titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID), PRIMARY KEY (roleID, titleID))',
 
-    'Collection(collectionID VARCHAR (100) NOT NULL, notes VARCHAR (1000), isWatched BOOL, rating DOUBLE(2,1), PRIMARY KEY (collectionID))',
-    'HasNotes(titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID), collectionID VARCHAR (100) NOT NULL REFERENCES Collection(collectionID), PRIMARY KEY (titleID, collectionID))',
+    'Collection(collectionID INT NOT NULL AUTO_INCREMENT, notes VARCHAR (1000), isWatched BOOL, rating DOUBLE(2,1), PRIMARY KEY (collectionID))',
+    'HasNotes(titleID VARCHAR (100) NOT NULL REFERENCES Media(titleID), collectionID INT NOT NULL REFERENCES Collection(collectionID), PRIMARY KEY (titleID, collectionID))',
 ]
 for (let query of create_table_query) {
     db_conn.query("CREATE TABLE IF NOT EXISTS " + query, (error) => {
         if (error) throw error;
-        //console.log("Created Table " + query);
+        console.log("Created Table " + query);
+    });
+}
+
+let create_index_query = [
+    'CREATE INDEX originalTitleIndex ON Media(originalTitle)',
+    'CREATE INDEX genreIndex ON Media(genre)',
+    'CREATE INDEX ratingIndex ON Media(rating)',
+    'CREATE INDEX startYearIndex ON Media(startYear)'
+]
+for (let query of create_index_query) {
+    db_conn.query(query, (error) => {
+        if (error) throw error;
+        console.log("Created Index " + query);
     });
 }
 
 // SAMPLE DATA INSERTION, IF THEY DON'T ALREADY EXIST
-
+/*
 let media = [
-    "'gww', 'Gone With the Wind', 'Romance', '1939-11-01', 9.8, 10923",
-    "'tgf', 'The Godfather', 'Drama', '1972-05-16', 9.5, 11998",
-    "'tsr', 'The Shawshank Redemption', 'Drama', '1994-06-07', 9.8, 17789",
-    "'tdk', 'The Dark Knight', 'Action', '2008-10-19', 8.7, 20912",
-    "'ttc', 'Titanic', 'Romance', '1997-03-03', 9.3, 14384"
+    "'gww', 'Gone With the Wind', 'Romance', '1939', 9.8, 10923",
+    "'tgf', 'The Godfather', 'Drama', '1972', 9.5, 11998",
+    "'tsr', 'The Shawshank Redemption', 'Drama', '1994', 9.8, 17789",
+    "'tdk', 'The Dark Knight', 'Action', '2008', 8.7, 20912",
+    "'ttc', 'Titanic', 'Romance', '1997', 9.3, 14384"
 ]
 
 for (let i of media) {
@@ -194,12 +207,13 @@ for (let i of playins) {
 }
 
 let collection = [
-    "'c0', 'Pretty good', true, 8.9",
-    "'c1', 'Good', true, 7.6"
+    "'Pretty good', true, 8.9",
+    "'Good', true, 7.6",
+    "'Boring', false, 6.5"
 ]
 
 for (let i of collection) {
-    db_conn.query("INSERT INTO Collection Values(" + i + ");", (error) => {
+    db_conn.query("INSERT INTO Collection(notes, isWatched, rating) Values(" + i + ");", (error) => {
         if (error) {
             if (error.code == 'ER_DUP_ENTRY') {
                 console.log(i + " already inserted")
@@ -213,8 +227,9 @@ for (let i of collection) {
 }
 
 let hasNotes = [
-    "'tdk', 'c0'",
-    "'ttc', 'c1'"
+    "'tdk', '1'",
+    "'ttc', '2'",
+    "'tgf', '3'"
 ]
 
 for (let i of hasNotes) {
@@ -230,46 +245,4 @@ for (let i of hasNotes) {
         }
     });
 }
-
-const app = express();
-app.set('views', './views');
-app.set('view engine', 'ejs')
-
-// Select movies in genre
-app.get('/genre/:genre', (req, res) => {
-    let sql = `SELECT * FROM media WHERE genre = "${req.params.genre}"`;
-    let query = db_conn.query(sql, (err, result) => {
-        if (err) throw err;
-        console.log(result);
-        res.send(`All Media with ${req.params.genre} found in database. \n ${JSON.stringify(result)}`);
-    });
-});
-
-// Find movie
-app.get("/movies/:title", (req, res) => {
-    let sql = `SELECT * FROM Media WHERE originalTitle = "${req.params.title}"`;
-    let query = db_conn.query(sql, (err, result) => {
-        if (err) throw err;
-        console.log(result);
-        res.send(`${req.params.title} found in database. \n ${JSON.stringify(result)}`);
-    });
-});
-
-// Find movie
-app.get("/rating/:rating", (req, res) => {
-    let sql = `SELECT * FROM media WHERE rating >= "${req.params.rating}"`;
-    let query = db_conn.query(sql, (err, result) => {
-        if (err) throw err;
-        console.log(result);
-        res.send(`Media with at least ${req.params.rating} found in database. \n ${JSON.stringify(result)}`);
-    });
-});
-
-
-app.get('/', (req, res) => {
-    res.render('index');
-});
-
-app.listen('3000', () => {
-    console.log(`Server is up and running on 3000 ...`);
-});
+*/

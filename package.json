@@ -4,8 +4,9 @@
   "description": "",
   "main": "db.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node db.js"
+    "init": "node db.js",
+    "populate": "python3 populate.py",
+    "start": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +17,8 @@
     "mysql": "^2.18.1",
     "nodemon": "^2.0.22",
     "path": "^0.12.7"
+  },
+  "overrides": {
+    "semver": "~7.5.2"
   }
 }
