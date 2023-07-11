@@ -20,7 +20,7 @@ Initiate tables:
 npm run init
 npm run populate
 ```
-or
+or optionally you may instead run the equivalent literal commands
 ```
 node db.js
 python3 populate.py
@@ -31,7 +31,7 @@ Start app:
 ```
 npm run start
 ```
-or
+or optionally you may instead run the equivalent literal command
 ```
 nodemon app.js
 ```
