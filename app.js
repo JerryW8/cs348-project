@@ -39,7 +39,7 @@ app.get('/media', (req, res) => {
         sql += ` AND genre = "${req.query.genre}"`;
     }
     if (req.query.year) {
-        sql += ` AND startYear = "${req.query.year}"`;
+        sql += ` AND startYear >= "${req.query.year}" ORDER BY startYear DESC`;
     }
     if (req.query.rating) {
         // possibly add <,>,<=,>= options
@@ -59,7 +59,7 @@ app.get('/media/:titleid', (req, res) => {
     let castsql = `SELECT name, characterName FROM PlaysIn NATURAL JOIN Role WHERE PlaysIn.titleID = "${req.params.titleid}";`;
     let crewsql = `SELECT name, role FROM Produced NATURAL JOIN Crew WHERE Produced.titleID = "${req.params.titleid}";`;
     let similarsql = `SELECT m1.titleID, m1.originalTitle FROM Media m1, Media m2 
-                        WHERE m2.titleID = "${req.params.titleid}" AND m1.genre = m2.genre AND m1.rating >= 7.5 LIMIT 10;`;
+                        WHERE m2.titleID = "${req.params.titleid}" AND m1.genre = m2.genre AND m1.rating >= 8.5 LIMIT 10;`;
     let sameCrewsql = `SELECT DISTINCT titleID, originalTitle FROM Crew
                         NATURAL JOIN Produced
                         NATURAL JOIN Media
@@ -87,19 +87,6 @@ app.get('/media/:titleid', (req, res) => {
                         db_conn.query(mediaTitle, (err, title) => {
                             if (err) throw err;
                             res.render('media', {cast: castresult, crew: crewresult, similarMedia: similarresult, similarCrew: samecrewresult, similarCast: samecastresult, title: title[0]});
-                            // res.send(
-                            //     `Cast: ${JSON.stringify(castresult)} 
-                            //     <br><br>
-                            //     Crew: ${JSON.stringify(crewresult)}
-                            //     <br><br>
-                            //     Recommended movies if you like this: ${JSON.stringify(similarresult)}
-                            //     <br><br>
-                            //     Other movies with similar crew: ${JSON.stringify(samecrewresult)}
-                            //     <br><br>
-                            //     Other movies with similar cast: ${JSON.stringify(samecastresult)}
-                            //     <br><br>
-                            //     Title: ${JSON.stringify(title)}
-                            //     `);
                         });
                     });
                 });

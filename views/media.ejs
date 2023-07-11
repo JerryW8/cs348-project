@@ -32,7 +32,7 @@
             <% for(var i=0; i < crew.length - 1; i++) { %>
                 <%= crew[i].name.slice(-1) === "\"" ? crew[i].name.slice(0, -1) : crew[i].name %> as <%- crew[i].role %>
             <% } %>
-            <%- crew[crew.length - 1].name %> as <%- crew[crew.length - 1].role %>.
+            <%= crew[crew.length - 1].name.slice(-1) === "\"" ? crew[crew.length - 1].name.slice(0, -1) : crew[crew.length - 1].name %> as <%- crew[crew.length - 1].role %>.
             <br><br>
         <% } %>
         <% if(similarMedia || similarMedia.length == 0) { %>
