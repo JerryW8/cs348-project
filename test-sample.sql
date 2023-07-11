@@ -12,7 +12,7 @@ SELECT * FROM media WHERE rating >= 8.0
 
 -- Gets the media with given startYear
 -- NOTE: 1997 is just a place holder
-SELECT * FROM media WHERE YEAR(startYear) >= 1997
+SELECT * FROM media WHERE startYear >= 1997
 ORDER BY startYear DESC
 
 -- Gets the recommended media with given genre and given titileID
