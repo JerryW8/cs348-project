@@ -1,6 +1,6 @@
 -- Gets the media with given title
 -- NOTE: "Titanic" is just a place holder
-SELECT * FROM media WHERE originTitle = "Titanic"
+SELECT * FROM media WHERE originalTitle LIKE "%Titanic%"
 
 -- Gets the media with given genre
 -- NOTE: "Drama" is just a place holder

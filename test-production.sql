@@ -6,7 +6,7 @@ CREATE INDEX startYearIndex ON Media(startYear);
 CREATE INDEX recommendedIndex ON Media(genre, rating, titleID);
 
 -- Gets the media with a title containing the given string
-SELECT * FROM media WHERE originalTitle LIKE "%Titanic%";
+SELECT * FROM media WHERE originalTitle LIKE "%Titanic%" LIMIT 10;
 
 -- Gets the media with given genre
 SELECT * FROM media WHERE genre = "Drama" LIMIT 10;
