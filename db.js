@@ -57,6 +57,19 @@ for (let query of create_table_query) {
     });
 }
 
+let create_index_query = [
+    'CREATE INDEX originalTitleIndex ON Media(originalTitle)',
+    'CREATE INDEX genreIndex ON Media(genre)',
+    'CREATE INDEX ratingIndex ON Media(rating)',
+    'CREATE INDEX startYearIndex ON Media(startYear)'
+]
+for (let query of create_index_query) {
+    db_conn.query(query, (error) => {
+        if (error) throw error;
+        console.log("Created Index " + query);
+    });
+}
+
 // SAMPLE DATA INSERTION, IF THEY DON'T ALREADY EXIST
 /*
 let media = [
