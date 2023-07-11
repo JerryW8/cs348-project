@@ -38,12 +38,12 @@ app.get('/media', (req, res) => {
     if (req.query.genre) {
         sql += ` AND genre = "${req.query.genre}"`;
     }
-    if (req.query.year) {
-        sql += ` AND startYear >= "${req.query.year}" ORDER BY startYear DESC`;
-    }
     if (req.query.rating) {
         // possibly add <,>,<=,>= options
         sql += ` AND rating >= "${req.query.rating}"`;
+    }
+    if (req.query.year) {
+        sql += ` AND startYear >= "${req.query.year}" ORDER BY startYear DESC`;
     }
     if (req.query.page) {
         // pagination implementation
