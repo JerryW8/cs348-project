@@ -41,7 +41,7 @@ As this project is updated you may need to clear your browser cache.
 
 ---
 Sample data:<br />
-Sample data: If you wish to load the sample data (not production data), uncomment everything after line 74 in db.js and run. Uncomment line 40 (dropTables()) to clear existing data in the database.
+If you wish to load the sample data (not production data), uncomment everything after line 74 in db.js and run. Uncomment line 40 (dropTables()) to clear existing data in the database.
 ```
 node db.js
 ```
