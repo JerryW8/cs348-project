@@ -6,7 +6,7 @@ CREATE INDEX startYearIndex ON Media(startYear);
 CREATE INDEX recommendedIndex ON Media(genre, rating, titleID);
 
 -- Gets the media with a title containing the given string
-SELECT * FROM media WHERE originalTitle LIKE "%Titanic%";
+SELECT * FROM media WHERE originalTitle LIKE "%Titanic%" LIMIT 10;
 
 -- Gets the media with given genre
 SELECT * FROM media WHERE genre = "Drama" LIMIT 10;
@@ -61,3 +61,24 @@ UPDATE Collection SET notes = "Great movie!" WHERE collectionID = 2;
 
 -- Update whether the movie has been watched
 UPDATE Collection SET isWatched = true WHERE collectionID = 3;
+
+-- Insert new movies into media
+INSERT INTO Media Values("tt0000000","sample media" , "sample genre", 2023, 0.0, 0);
+
+-- Update startYear of a given movie
+UPDATE Media SET startYear = 2000 WHERE titleID= "tt0000000";
+
+-- Update originalTitle of a given movie
+UPDATE Media SET originalTitle = "updated name for sample media" WHERE titleID = "tt0000000";
+
+-- Update genre of a given movie
+UPDATE Media SET genre = "new sample genre" WHERE titleID = "tt0000000";
+
+-- Update rating of a given movie
+UPDATE Media SET rating = 9.0 WHERE titleID = "tt0000000";
+
+-- Update numVotes of a given movie
+UPDATE Media SET numVotes= 1 WHERE titleID = "tt0000000";
+
+-- Delete a movie from the media
+DELETE FROM Media WHERE titleID = "tt0000000";
