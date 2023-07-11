@@ -17,13 +17,13 @@ npm i
 
 Initiate tables:
 ```
-node run init
-node run populate
+npm run init
+npm run populate
 ```
 Some of the data will not be able to fit into the schema and as a result will fail to be loaded.
 
 Start app:
 ```
-node run start
+npm run start
 ```
 As this project is updated you may need to clear your browser cache.
