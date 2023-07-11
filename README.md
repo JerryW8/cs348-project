@@ -20,7 +20,7 @@ Initiate tables:
 npm run init
 npm run populate
 ```
-Some of the data will not be able to fit into the schema and as a result will fail to be loaded.
+Some of the data will not be able to fit into the schema and as a result will fail to be loaded. All warnings can be ignored for now.
 
 Start app:
 ```
