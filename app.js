@@ -55,7 +55,7 @@ app.get('/media', (req, res) => {
 });
 
 // Display information about a movie
-app.get('/media/:titleid', (req, res) => {
+app.get('/media/:titleid', async (req, res) => {
     let castsql = `SELECT name, characterName FROM PlaysIn NATURAL JOIN Role WHERE PlaysIn.titleID = "${req.params.titleid}";`;
     let crewsql = `SELECT name, role FROM Produced NATURAL JOIN Crew WHERE Produced.titleID = "${req.params.titleid}";`;
     let similarsql = `SELECT m1.titleID, m1.originalTitle FROM Media m1, Media m2 
@@ -73,26 +73,60 @@ app.get('/media/:titleid', (req, res) => {
                         AND titleID <>"${req.params.titleid}"
                         LIMIT 10;`;
     let mediaTitle = `SELECT originalTitle FROM Media WHERE titleID="${req.params.titleid}";`;
-    
-    db_conn.query(castsql, (err, castresult) => {
-        if (err) throw err;
-        db_conn.query(crewsql, (err, crewresult) => {
-            if (err) throw err;
-            db_conn.query(similarsql, (err, similarresult) => {
-                if (err) throw err;
-                db_conn.query(sameCrewsql, (err, samecrewresult) => {
+
+    try {
+        let castresult, crewresult, similarresult, samecrewresult, samecastresult, title
+        // concurrent implementation, either i'm mistaken that these run concurrently or queries just do run for a long time
+        promises = [
+            new Promise((resolve) => {
+                db_conn.query(castsql, (err, result) => {
                     if (err) throw err;
-                    db_conn.query(sameCastsql, (err, samecastresult) => {
-                        if (err) throw err;
-                        db_conn.query(mediaTitle, (err, title) => {
-                            if (err) throw err;
-                            res.render('media', {cast: castresult, crew: crewresult, similarMedia: similarresult, similarCrew: samecrewresult, similarCast: samecastresult, title: title[0], titleID: req.params.titleid});
-                        });
-                    });
-                });
-            });
-        });
-    });
+                    console.log(result)
+                    castresult = result
+                    resolve()
+            })}),
+            new Promise((resolve) => {
+                db_conn.query(crewsql, (err, result) => {
+                    if (err) throw err;
+                    console.log(result)
+                    crewresult = result
+                    resolve()
+            })}),
+            new Promise((resolve) => {
+                db_conn.query(similarsql, (err, result) => {
+                    if (err) throw err;
+                    console.log(result)
+                    similarresult = result
+                    resolve()
+            })}),
+            new Promise((resolve) => {
+                db_conn.query(sameCrewsql, (err, result) => {
+                    if (err) throw err;
+                    console.log(result)
+                    samecrewresult = result
+                    resolve()
+            })}),
+            new Promise((resolve) => {
+                db_conn.query(sameCastsql, (err, result) => {
+                    if (err) throw err;
+                    console.log(result)
+                    samecastresult = result
+                    resolve()
+            })}),
+            new Promise((resolve) => {
+                db_conn.query(mediaTitle, (err, result) => {
+                    if (err) throw err;
+                    console.log(result)
+                    title = result
+                    resolve()
+            })}),
+        ]
+        Promise.all(promises).then(() => {
+            res.render('media', {cast: castresult, crew: crewresult, similarMedia: similarresult, similarCrew: samecrewresult, similarCast: samecastresult, title: title[0], titleID: req.params.titleid}); 
+        })
+    } catch (error) {
+        throw error
+    }
 });
 
 // View your collection
