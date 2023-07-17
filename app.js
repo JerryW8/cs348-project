@@ -86,14 +86,71 @@ app.get('/media/:titleid', (req, res) => {
                         if (err) throw err;
                         db_conn.query(mediaTitle, (err, title) => {
                             if (err) throw err;
-                            res.render('media', {cast: castresult, crew: crewresult, similarMedia: similarresult, similarCrew: samecrewresult, similarCast: samecastresult, title: title[0]});
+                            res.render('media', {cast: castresult, crew: crewresult, similarMedia: similarresult, similarCrew: samecrewresult, similarCast: samecastresult, title: title[0], titleID: req.params.titleid});
                         });
                     });
                 });
             });
         });
     });
+});
 
+// View your collection
+app.get('/collection', (req, res) => {
+    let sql = `SELECT originalTitle, collectionID, isWatched, Collection.rating, notes
+                FROM Collection NATURAL JOIN HasNotes h JOIN Media m ON h.titleID = m.titleID`;
+    db_conn.query(sql, (err, result) => {
+        if (err) throw err;
+        res.render('collection-index', {media: result});
+    });
+});
+
+// View a movie in your collection
+app.get('/collection/:collectionID', (req, res) => {
+    let sql = `SELECT m.titleID, originalTitle, collectionID, isWatched, Collection.rating, notes
+                FROM Collection NATURAL JOIN HasNotes h JOIN Media m ON h.titleID = m.titleID WHERE collectionID = "${req.params.collectionID}"`;
+    db_conn.query(sql, (err, result) => {
+        if (err) throw err;
+        res.render('collection', {media: result[0]});
+    });
+});
+
+// Add to collection
+app.post('/collection/:titleid/create', (req, res) => {
+    let collectionInsertSql = `INSERT INTO Collection(isWatched, collectionID) VALUES(false, NULL);`
+    db_conn.query(collectionInsertSql, (err, result) => {
+        if (err) throw err; 
+        let hasNotesInsertSql = `INSERT INTO HasNotes VALUES("${req.params.titleid}", ${result.insertId});`
+        db_conn.query(hasNotesInsertSql, (err, result) => {
+            if (err) throw err; 
+            res.redirect("back")
+        });
+    });
+});
+
+// Update to collection
+// NOTE: since HTML forms only support post, this uses a post method, differentiated by the 'update' in the url
+app.post('/collection/:collectionID/update', (req, res) => {
+    let body = req.body
+    if (body.rating.length == 0) body.rating = "NULL"
+    let sql = `UPDATE Collection SET isWatched=${body.isWatched},rating=${body.rating},notes="${body.notes}" WHERE collectionID=${req.params.collectionID}`;
+    db_conn.query(sql, (err, result) => {
+        if (err) throw err; 
+        res.redirect("back")
+    });
+});
+
+// Delete from collection
+app.post('/collection/:collectionID/delete', (req, res) => {
+    let collectionDeleteSql = `DELETE FROM Collection WHERE collectionID = ${req.params.collectionID}`
+    let hasNotesDeleteSql = `DELETE FROM HasNotes WHERE collectionID = ${req.params.collectionID}`
+    db_conn.query(collectionDeleteSql, (err, result) => {
+        if (err) throw err; 
+        db_conn.query(hasNotesDeleteSql, (err, result) => {
+            if (err) throw err; 
+            res.redirect("/collection")
+        });
+    });
 });
 
 app.get('/', (req, res) => {
