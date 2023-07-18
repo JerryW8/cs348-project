@@ -70,6 +70,8 @@ for (let query of create_index_query) {
     });
 }
 
+db_conn.end()
+
 // SAMPLE DATA INSERTION, IF THEY DON'T ALREADY EXIST
 /*
 let media = [
