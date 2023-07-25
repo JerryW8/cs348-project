@@ -42,6 +42,22 @@
                 <% } %>
             </tbody>
         </table>
+        <br>
+        <% if(recommendations) { %>
+        Recommended movies/TV shows based on your collection:
+        <table>
+            <tr>
+                <th>Title</th>
+            </tr>
+            <% if(recommendations) { %>
+                <% for(var i=0; i < recommendations.length; i++) { %>
+                    <tr class="card">
+                        <td> <a href="/media/<%= recommendations[i].titleID %>"> <%- recommendations[i].originalTitle %> </a></td>
+                    </tr>
+                <% } %>
+            <% } %>
+        </table>
+        <% } %>
     </div>
 </body>
 
