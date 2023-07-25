@@ -131,12 +131,37 @@ app.get('/media/:titleid', async (req, res) => {
 
 // View your collection
 app.get('/collection', (req, res) => {
-    let sql = `SELECT originalTitle, collectionID, isWatched, Collection.rating, notes
+    let collectionSql = `SELECT originalTitle, collectionID, isWatched, Collection.rating, notes
                 FROM Collection NATURAL JOIN HasNotes h JOIN Media m ON h.titleID = m.titleID`;
-    db_conn.query(sql, (err, result) => {
-        if (err) throw err;
-        res.render('collection-index', {media: result});
-    });
+    let recsSql = `SELECT * FROM Media WHERE rating >= 8.5 AND genre IN 
+	                        (SELECT genre FROM HasNotes hn NATURAL JOIN Collection c JOIN Media m ON m.titleID = hn.titleID WHERE c.rating >= 8.5) LIMIT 10;`;
+    try {
+        let collectionResult, recsResult
+        
+        promises = [
+            new Promise((resolve) => {
+                db_conn.query(collectionSql, (err, res) => {
+                    if (err) throw err;
+                    console.log(res)
+                    collectionResult = res
+                    resolve()
+                })
+            }),
+            new Promise((resolve) => {
+                db_conn.query(recsSql, (err, res) => {
+                    if (err) throw err;
+                    console.log(res)
+                    recsResult = res
+                    resolve()
+                })
+            })
+        ]
+        Promise.all(promises).then(() => {
+            res.render('collection-index', {media: collectionResult, recommendations: recsResult}); 
+        })
+    } catch (err) {
+        throw err
+    }    
 });
 
 // View a movie in your collection
