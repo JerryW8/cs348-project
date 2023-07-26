@@ -4,7 +4,7 @@ const express = require("express");
 let db_conn = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: 'cs348cs348'
+    password: 'password'
 });
 
 db_conn.connect((err) => {
@@ -72,10 +72,10 @@ app.get('/media/:titleid', async (req, res) => {
                         WHERE RIGHT(roleID, 9) IN (SELECT RIGHT(roleID, 9) FROM PlaysIn WHERE titleID = "${req.params.titleid}")
                         AND titleID <>"${req.params.titleid}"
                         LIMIT 10;`;
-    let mediaTitle = `SELECT originalTitle FROM Media WHERE titleID="${req.params.titleid}";`;
+    let mediaInfo = `SELECT * FROM Media WHERE titleID="${req.params.titleid}";`;
 
     try {
-        let castresult, crewresult, similarresult, samecrewresult, samecastresult, title
+        let castresult, crewresult, similarresult, samecrewresult, samecastresult, media
         // concurrent implementation, either i'm mistaken that these run concurrently or queries just do run for a long time
         promises = [
             new Promise((resolve) => {
@@ -114,20 +114,93 @@ app.get('/media/:titleid', async (req, res) => {
                     resolve()
             })}),
             new Promise((resolve) => {
-                db_conn.query(mediaTitle, (err, result) => {
+                db_conn.query(mediaInfo, (err, result) => {
                     if (err) throw err;
                     console.log(result)
-                    title = result
+                    media = result[0]
                     resolve()
             })}),
         ]
         Promise.all(promises).then(() => {
-            res.render('media', {cast: castresult, crew: crewresult, similarMedia: similarresult, similarCrew: samecrewresult, similarCast: samecastresult, title: title[0], titleID: req.params.titleid}); 
+            res.render('media', {cast: castresult, crew: crewresult, similarMedia: similarresult, similarCrew: samecrewresult, similarCast: samecastresult, media: media, titleID: req.params.titleid}); 
         })
     } catch (error) {
         throw error
     }
 });
+
+// Checks if a titleID already exists. Used for adding a movie
+app.get('/media/checkTitleID/:titleID', (req, res) => {
+    let titleID = req.params.titleID
+  
+    db_conn.query(`SELECT COUNT(*) AS count FROM Media WHERE titleID = "${titleID}"`, (err, result) => {
+      if (err) throw err
+      const count = result[0].count;
+      res.json({ exists: count > 0 });
+    })
+  })
+
+// Add a movie
+app.post('/media/create', (req, res) => {
+    let body = req.body
+    if (!body.addStartYear) {
+        body.addStartYear = "NULL"
+    }
+    if (!body.addRating) {
+        body.addRating = "NULL"
+    }
+    if (!body.addNumVotes) {
+        body.addNumVotes = "NULL"
+    }
+    let createMediaSql = `INSERT INTO Media VALUES(
+        "${body.addTitleID}", 
+        "${body.addTitle}", 
+        "${body.addGenre}", 
+        ${body.addStartYear}, 
+        ${body.addRating}, 
+        ${body.addNumVotes})
+    `
+    db_conn.query(createMediaSql, (err, result) => {
+        if (err) throw err;
+        res.redirect("back")
+    })
+})
+
+// Update a movie
+app.post('/media/:titleID/update', (req, res) => {
+    let body = req.body
+    if (!body.startYear) {
+        body.startYear = "NULL"
+    }
+    if (!body.mediaRating) {
+        body.mediaRating = "NULL"
+    }
+    if (!body.numVotes) {
+        body.numVotes = "NULL"
+    }
+    let sql = `UPDATE Media SET 
+        originalTitle="${body.mediaTitle}",
+        genre="${body.mediaGenre}",
+        startYear=${body.startYear},
+        rating=${body.mediaRating},
+        numVotes=${body.numVotes} 
+    WHERE titleID="${req.params.titleID}"`
+    
+    db_conn.query(sql, (err, result) => {
+        if (err) throw err; 
+        res.redirect("back")
+    });
+})
+
+// Delete a movie
+app.post('/media/:titleID/delete', (req, res) => {
+    console.log('DELETEE')
+    let sql = `DELETE FROM Media WHERE titleID = "${req.params.titleID}"`
+    db_conn.query(sql, (err, result) => {
+        if (err) throw err; 
+        res.redirect("/media")
+    });
+})
 
 // View your collection
 app.get('/collection', (req, res) => {
