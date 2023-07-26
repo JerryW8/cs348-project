@@ -26,9 +26,9 @@
         <% if(cast && cast.length != 0) { %>
             The cast of the movie included 
             <% for(var i=0; i < cast.length - 1; i++) { %>
-                <%- cast[i].characterName.slice(-1) === "\"" ? cast[i].characterName.slice(0, -1) : cast[i].characterName %> played by  <%- cast[i].name %>,
+                <%- cast[i].characterName.slice(-1) === "\"" ? cast[i].characterName.slice(0, -1) == "NULL" ? "N/A" : cast[i].characterName.slice(0, -1) : cast[i].characterName == "NULL" ? "N/A" : cast[i].characterName%> played by  <%- cast[i].name %>,
             <% } %>
-            <%- cast[cast.length - 1].characterName %> played by <%- cast[cast.length - 1].name %>.
+            <%- cast[cast.length - 1].characterName == "NULL" ? "N/A" : cast[cast.length - 1].characterName%> played by <%- cast[cast.length - 1].name %>.
             <br><br>
         <% } %>
         <% if(crew && crew.length > 0) { %>

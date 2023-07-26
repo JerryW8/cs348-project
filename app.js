@@ -31,26 +31,32 @@ app.use(express.static(__dirname + '/public'));
 
 // Search movie based on any parameter
 app.get('/media', (req, res) => {
-    let sql = `SELECT * FROM media WHERE TRUE`;
+    let where = " WHERE TRUE"
     if (req.query.title) {
-        sql += ` AND originalTitle LIKE "%${req.query.title}%"`;
+        where += ` AND originalTitle LIKE "%${req.query.title}%"`;
     }
     if (req.query.genre) {
-        sql += ` AND genre = "${req.query.genre}"`;
+        where += ` AND genre = "${req.query.genre}"`;
     }
     if (req.query.rating) {
-        // possibly add <,>,<=,>= options
-        sql += ` AND rating >= "${req.query.rating}"`;
+        where += ` AND rating >= "${req.query.rating}"`;
     }
     if (req.query.year) {
-        sql += ` AND startYear >= "${req.query.year}" ORDER BY startYear DESC`;
+        where += ` AND startYear >= "${req.query.year}"`;
     }
+    let sql = `SELECT SQL_CALC_FOUND_ROWS * FROM media ${where} GROUP BY titleid ORDER BY startYear DESC`
     if (req.query.page) {
-        // pagination implementation
+        sql += ` LIMIT 100 OFFSET ${(req.query.page - 1) * 100}`
+    } else {
+        sql += ` LIMIT 100 OFFSET 0`
     }
+    let newURL = `/media?title=${req.query.title}&genre=${req.query.genre}&year=${req.query.year}&rating=${req.query.rating}`
     db_conn.query(sql, (err, result) => {
         if (err) throw err;
-        res.render('index', {media: result});
+        db_conn.query("SELECT FOUND_ROWS()", (err, qTotal) => {
+            if (err) throw err;
+            res.render('index', {media: result, total: qTotal[0]['FOUND_ROWS()'], newURL: newURL, curPage: req.query.page ? parseInt(req.query.page) : 1});
+        });
     });
 });
 

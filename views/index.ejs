@@ -142,7 +142,7 @@
                     <% for(var i=0; i < media.length; i++) { %>
                         <tr>
                             <th scope="row"> <a href="/media/<%= media[i].titleID %>"> <%- media[i].originalTitle %> </a></th>
-                            <td> <%- media[i].genre %> </td>
+                            <td> <%- media[i].genre == "NULL" ? "N/A" : media[i].genre %> </td>
                             <td> <%- media[i].startYear %> </td>
                             <td> <%- media[i].rating || "N/A" %> </td>
                             <td> <%- media[i].numVotes || "N/A" %> </td>
@@ -152,6 +152,13 @@
             </tbody>
         </table>
     </div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <% for(var i=Math.max(0, curPage - 7); i < Math.min(total / 100, curPage + 6); i++) { %>
+            <li class="page-item"><a class="page-link" href="<%= newURL + `&page=${i+1}` %>"><%- i + 1 %></a></li>
+          <% } %>
+        </ul>
+      </nav>
 </body>
 
 </html>

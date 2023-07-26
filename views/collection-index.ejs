@@ -34,7 +34,7 @@
                     <% for(var i=0; i < media.length; i++) { %>
                         <tr>
                             <th scope="row"> <a href="/collection/<%= media[i].collectionID %>"> <%- media[i].originalTitle %> </a></th>
-                            <td> <%- media[i].isWatched %> </td>
+                            <td> <%- media[i].isWatched == 1 ? "Yes" : "No"%> </td>
                             <td> <%- media[i].rating || "N/A" %> </td>
                             <td> <%- media[i].notes || "N/A" %> </td>
                         </tr>
