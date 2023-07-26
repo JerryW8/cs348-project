@@ -4,7 +4,7 @@ const express = require("express");
 let db_conn = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: 'password'
+    password: 'cs348cs348'
 });
 
 db_conn.connect((err) => {
@@ -185,7 +185,7 @@ app.post('/media/:titleID/update', (req, res) => {
         rating=${body.mediaRating},
         numVotes=${body.numVotes} 
     WHERE titleID="${req.params.titleID}"`
-    
+
     db_conn.query(sql, (err, result) => {
         if (err) throw err; 
         res.redirect("back")
