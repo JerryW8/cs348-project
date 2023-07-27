@@ -37,7 +37,7 @@ or optionally you may instead run the equivalent literal command
 ```
 nodemon app.js
 ```
-And then go over to localhost:3000 and localhost:3000/collection. As this project is updated you may need to clear your browser cache.
+And then go over to localhost:3000 as wel as localhost:3000/collection for the two primary views. As this project is updated you may need to clear your browser cache.
 
 ---
 Sample data:<br />
