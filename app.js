@@ -44,13 +44,16 @@ app.get('/media', (req, res) => {
     if (req.query.year) {
         where += ` AND startYear >= "${req.query.year}"`;
     }
-    let sql = `SELECT SQL_CALC_FOUND_ROWS * FROM media ${where} GROUP BY titleid ORDER BY startYear DESC`
+    let sql = `SELECT SQL_CALC_FOUND_ROWS * FROM media ${where} GROUP BY titleid`
+    if (req.query.year) {
+        sql += ` ORDER BY startYear DESC`;
+    }
     if (req.query.page) {
         sql += ` LIMIT 100 OFFSET ${(req.query.page - 1) * 100}`
     } else {
         sql += ` LIMIT 100 OFFSET 0`
     }
-    let newURL = `/media?title=${req.query.title}&genre=${req.query.genre}&year=${req.query.year}&rating=${req.query.rating}`
+    let newURL = `/media?title=${req.query.title ?? ""}&genre=${req.query.genre ?? ""}&year=${req.query.year ?? ""}&rating=${req.query.rating ?? ""}`
     db_conn.query(sql, (err, result) => {
         if (err) throw err;
         db_conn.query("SELECT FOUND_ROWS()", (err, qTotal) => {
@@ -292,7 +295,7 @@ app.post('/collection/:collectionID/delete', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.render('index', {media: null});
+    res.render('index', {media: null, curPage: 0});
 });
 
 app.listen('3000', () => {
