@@ -7,6 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Our main page">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <link href="/css/styles.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <title>CS 348 IMDB Project</title>
@@ -16,16 +19,16 @@
 <body>
     <div class="media-title">
         <center> 
-            <h2><label for="media"><%- title.originalTitle %></label></h2><br>
+            <h2><label for="media"><%- media.originalTitle %></label></h2><br>
         </center>
     </div>
     <div class="media-info">
         <% if(cast && cast.length != 0) { %>
             The cast of the movie included 
             <% for(var i=0; i < cast.length - 1; i++) { %>
-                <%- cast[i].characterName.slice(-1) === "\"" ? cast[i].characterName.slice(0, -1) : cast[i].characterName %> played by  <%- cast[i].name %>,
+                <%- cast[i].characterName.slice(-1) === "\"" ? cast[i].characterName.slice(0, -1) == "NULL" ? "N/A" : cast[i].characterName.slice(0, -1) : cast[i].characterName == "NULL" ? "N/A" : cast[i].characterName%> played by  <%- cast[i].name %>,
             <% } %>
-            <%- cast[cast.length - 1].characterName %> played by <%- cast[cast.length - 1].name %>.
+            <%- cast[cast.length - 1].characterName == "NULL" ? "N/A" : cast[cast.length - 1].characterName%> played by <%- cast[cast.length - 1].name %>.
             <br><br>
         <% } %>
         <% if(crew && crew.length > 0) { %>
@@ -83,6 +86,80 @@
                 <% } %>
             </table>
         <% } %>
+        <br>
+        <form action="/collection/<%= titleID %>/create" method="post">
+            <input type="submit" type="button" class="btn btn-primary" value="Add to collection">
+        </form>
+        <br>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editMediaModal">
+            Edit media
+        </button>
+        <br><br>
+        <form action="/media/<%= titleID %>/delete" method="post">
+            <input type="submit" type="button" class="btn btn-danger" value="Delete media">
+        </form>
+    
+        <!-- Modal -->
+        <div class="modal fade" id="editMediaModal" tabindex="-1" role="dialog" aria-labelledby="editMediaModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="editMediaModalLabel">Edit Media Info for <%- media.originalTitle %></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form action="/media/<%= media.titleID %>/update" method="post">
+                    <div class="modal-body">
+                        <label for="mediaTitle"><h6>Title: </h6></label>
+                        <br>
+                        <input type="text" id="mediaTitle" class="w-75" name="mediaTitle" minlength="1" maxlength="100" value="<%= media.originalTitle %>" required>
+                        <br>
+                        <br>
+                        <label for="mediaGenre"><h6>Genre: </h6></label>
+                        <br>
+                        <input type="text" id="mediaGenre" name="mediaGenre" maxlength="50" value="<%= media.genre %>">
+                        <br>
+                        <br>
+                        <label for="startYear"><h6>Start year: </h6></label>
+                        <br>
+                        <input type="number" id="startYear" name="startYear" min="0" value="<%= media.startYear %>">
+                        <br>
+                        <br>
+                        <label for="mediaRating"><h6>Rating: </h6></label>
+                        <br>
+                        <input type="text" id="mediaRating" name="mediaRating" maxlength="3" value="<%= media.rating %>">
+                        <br>
+                        <br>
+                        <label for="numVotes"><h6>Number of Votes: </h6></label>
+                        <br>
+                        <input type="number" min="0" id="numVotes" name="numVotes" value="<%= media.numVotes %>">
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" id="submit-edit-media" type="button" class="btn btn-primary" value="Save changes">
+                    </div>
+                    <script>
+                        ratingField = document.getElementById("mediaRating")
+                        submitButton = document.getElementById("submit-edit-media")
+
+                        ratingField.addEventListener("input", () => {
+                            let input = ratingField.value
+                            length = input.length
+                            if (length == 0 || length == 1 && '0' <= input.charAt(0) && input.charAt(0) <= '9') {
+                                submitButton.disabled = false
+                            } else if (length == 3 && '0' <= input.charAt(0) && input.charAt(0) <= '9' && input.charAt(1) == '.' && '0' <= input.charAt(2) && input.charAt(2) <= '9') {
+                                submitButton.disabled = false
+                            } else {
+                                submitButton.disabled = true
+                            }
+                        })
+                    </script>
+                </form>
+                </div>
+            </div>
+          </div>
     </div>
 </body>
 
