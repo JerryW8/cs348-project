@@ -1,12 +1,14 @@
 *ALL data in this project provided by IMDb: https://developer.imdb.com/non-commercial-datasets/*
 
-Getting mysql running on Mac after installing mysql
+Getting mysql running on Mac after installing mysql and enter `y` when prompted to set up mysql. Also, enter `cs348cs348` as your password.
 ```
 mysql.server start
 mysql_secure_installation
 mysql -u root -p
 ```
-Enter cs348cs348 as your password.
+If you encounter an issue that looks like
+``` Error: ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server; consider upgrading MySQL client ```
+then try using the solution in this [article](https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server#:~:text=1791-,Execute%20the%20following%20query%20in%20MYSQL%20Workbench,-ALTER%20USER%20%27root).
 
 ---
 Installing dependencies:
