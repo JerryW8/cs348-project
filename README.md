@@ -7,7 +7,9 @@ mysql_secure_installation
 mysql -u root -p
 ```
 If you encounter an issue that looks like
-``` Error: ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server; consider upgrading MySQL client ```
+```
+Error: ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server; consider upgrading MySQL client 
+```
 then try using the solution in this [article](https://stackoverflow.com/questions/50093144/mysql-8-0-client-does-not-support-authentication-protocol-requested-by-server#:~:text=1791-,Execute%20the%20following%20query%20in%20MYSQL%20Workbench,-ALTER%20USER%20%27root).
 
 ---
