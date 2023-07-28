@@ -22,6 +22,9 @@
             <h2><label for="media"><a href="/media/<%= media.titleID %>"> <%- media.originalTitle %> </a></label></h2><br>
         </center>
     </div>
+    <form action="/collection" method="get">
+        <input type="submit" value="Go back" class="btn btn-primary">
+    </form>
     <div class="media-info">
         <% if(media.isWatched) { %>
             You have watched this movie

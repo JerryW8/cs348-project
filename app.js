@@ -203,7 +203,6 @@ app.post('/media/:titleID/update', (req, res) => {
 
 // Delete a movie
 app.post('/media/:titleID/delete', (req, res) => {
-    console.log('DELETEE')
     let sql = `DELETE FROM Media WHERE titleID = "${req.params.titleID}"`
     db_conn.query(sql, (err, result) => {
         if (err) throw err; 
@@ -213,6 +212,7 @@ app.post('/media/:titleID/delete', (req, res) => {
 
 // View your collection
 app.get('/collection', (req, res) => {
+    console.log("in collection route")
     let collectionSql = `SELECT originalTitle, collectionID, isWatched, Collection.rating, notes
                 FROM Collection NATURAL JOIN HasNotes h JOIN Media m ON h.titleID = m.titleID`;
     let recsSql = `SELECT * FROM Media WHERE rating >= 8.5 AND genre IN 
